@@ -8,6 +8,7 @@ import tempfile
 import uuid
 from io import BytesIO
 from pathlib import Path
+from urllib.parse import quote
 
 import uvicorn
 from fastapi import FastAPI, File, HTTPException, UploadFile
@@ -135,7 +136,7 @@ async def generate_report(file: UploadFile = File(...)) -> StreamingResponse:
         return StreamingResponse(
             BytesIO(pdf_bytes),
             media_type="application/pdf",
-            headers={"Content-Disposition": f'attachment; filename="{filename}"'},
+            headers={"Content-Disposition": f"attachment; filename*=utf-8''{quote(filename)}"},
         )
     except HTTPException:
         raise
